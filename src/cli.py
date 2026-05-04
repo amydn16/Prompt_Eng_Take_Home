@@ -1,10 +1,11 @@
 import argparse
 from src.main import (
-    BASIC_SYSTEM_PROMPT,
+    GENERATOR_SYSTEM_PROMPT,
     DEMO_QUERIES,
     agent_loop,
     agent_loop_query_list,
 )
+from src.evals.run_evals import GRADER_SYSTEM_PROMPT, full_agent_evals
 
 
 def cli():
@@ -32,12 +33,19 @@ def cli():
     elif args.mode == "default":
         agent_loop(
             query=args.query,
-            system_prompt=BASIC_SYSTEM_PROMPT,
+            system_prompt=GENERATOR_SYSTEM_PROMPT,
             max_tokens=args.max_tokens,
         )
     elif args.mode == "demo":
         agent_loop_query_list(
             query_list=DEMO_QUERIES,
-            system_prompt=BASIC_SYSTEM_PROMPT,
+            system_prompt=GENERATOR_SYSTEM_PROMPT,
+            max_tokens=args.max_tokens,
+        )
+    elif args.mode == "evals":
+        full_agent_evals(
+            file_path="evals/wikipedia_evals.json",
+            generator_system_prompt=GENERATOR_SYSTEM_PROMPT,
+            grader_system_prompt=GRADER_SYSTEM_PROMPT,
             max_tokens=args.max_tokens,
         )

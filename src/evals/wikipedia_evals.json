@@ -1,0 +1,201 @@
+[
+  {
+    "id": "search_decision_001",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "Who is the current Secretary-General of the United Nations?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: António Guterres.",
+    "key_facts": ["decides to search Wikipedia", "does not answer from memory alone"],
+    "rationale": "Officeholders change; the model's training data may be stale."
+  },
+  {
+    "id": "search_decision_002",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "What is the chemical formula for water?",
+    "sample_correct_answer": "I did not search Wikipedia to come up with this answer: the chemical formula for water is H2O.",
+    "key_facts": ["H2O", "does not search Wikipedia"],
+    "rationale": "Stable, well-known scientific fact that does not change."
+  },
+  {
+    "id": "search_decision_003",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "What is the current population of Iceland?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: Iceland's current population is 394,324.",
+    "key_facts": ["decides to search Wikipedia", "does not state a figure from memory alone"],
+    "rationale": "Population figures are updated regularly and may be stale in training data."
+  },
+  {
+    "id": "search_decision_004",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "In what year did World War II end?",
+    "sample_correct_answer": "I did not search Wikipedia to come up with this answer: World War II ended in 1945.",
+    "key_facts": ["1945", "does not search Wikipedia"],
+    "rationale": "Fixed historical fact universally agreed upon and stable."
+  },
+  {
+    "id": "search_decision_005",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "Who is the current Prime Minister of Japan?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: the current Prime Minister of Japan is Sanae Takaichi.",
+    "key_facts": ["decides to search Wikipedia", "does not answer from memory alone"],
+    "rationale": "Political leadership changes frequently; training data is likely outdated."
+  },
+  {
+    "id": "search_decision_006",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "What is the speed of light in a vacuum?",
+    "sample_correct_answer": "I did not search Wikipedia to come up with this answer: The speed of light in a vacuum is approximately 299,792,458 meters per second.",
+    "key_facts": ["299,792,458 m/s or equivalent", "does not search Wikipedia"],
+    "rationale": "A defined physical constant that does not change."
+  },
+  {
+    "id": "fetch_article_001",
+    "category": "fetches_correct_article",
+    "format": "one_sentence_graded",
+    "question": "What's the best Wikipedia article to read about the history of the Byzantine Empire?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: The most appropriate article to fetch is 'Byzantine Empire', as it is the canonical comprehensive article covering the full history of that state.",
+    "key_facts": ["Byzantine Empire", "not a disambiguation page", "not a narrower subtopic article"],
+    "rationale": "'Byzantine Empire' is the canonical, comprehensive article rather than a disambiguation page or a narrower subtopic."
+  },
+  {
+    "id": "fetch_article_002",
+    "category": "fetches_correct_article",
+    "format": "one_sentence_graded",
+    "question": "tell me about mercury, i heard it can kill you.",
+    "sample_correct_answer": "I did not search Wikipedia to come up with this answer: mercury is a heavy, silvery liquid metallic element that is highly toxic to humans, capable of causing severe neurological and organ damage through inhalation of its vapors, skin contact, or ingestion.",
+    "key_facts": ["recognizes ambiguity between planet / element / mythology"],
+    "rationale": "The question starts off ambiguous, but the context at the end indicates that the query is about the chemical element,which is a stable, well-known scientific fact that does not change."
+  },
+  {
+    "id": "unanswerable_001",
+    "category": "unanswerable_graceful_failure",
+    "format": "one_sentence_graded",
+    "question": "What is my neighbor's date of birth?",
+    "sample_correct_answer": "I did not search Wikipedia to come up with this answer: this question cannot be answered because I don't know your neighbor's name.",
+    "key_facts": ["declines to search or answer", "explains private individuals are not on Wikipedia", "does not guess"]
+  },
+  {
+    "id": "unanswerable_002",
+    "category": "unanswerable_graceful_failure",
+    "format": "one_sentence_graded",
+    "question": "What did Albert Einstein have for breakfast on March 14, 1920?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: this level of personal detail is not documented on Wikipedia and the question cannot be answered.",
+    "key_facts": ["declines to answer", "acknowledges this detail is not on Wikipedia", "does not substitute general Einstein information"]
+  },
+  {
+    "id": "unanswerable_003",
+    "category": "unanswerable_graceful_failure",
+    "format": "one_sentence_graded",
+    "question": "Who will win the next FIFA World Cup?",
+    "sample_correct_answer": "I did not search Wikipedia to come up with this answer: this question cannot be answered because it concerns a future event.",
+    "key_facts": ["declines to answer", "identifies this as a future event", "does not substitute historical winners or rankings"]
+  },
+  {
+    "id": "unanswerable_004",
+    "category": "unanswerable_graceful_failure",
+    "format": "one_sentence_graded",
+    "question": "What is the exact number of grains of sand on Earth?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: this question cannot be answered with precision because Wikipedia does not provide sufficient information.",
+    "key_facts": ["declines to give a precise answer", "explains the question is unanswerable by nature", "does not fabricate or calculate a specific number"]
+  },
+  {
+    "id": "factual_accuracy_001",
+    "category": "factual_accuracy",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, in what year was the Eiffel Tower completed, and for what occasion was it built?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: the Eiffel Tower was completed in 1889 and built as the centerpiece for the 1889 World's Fair (Exposition Universelle) held in Paris.",
+    "key_facts": ["1889", "World's Fair / Exposition Universelle"]
+  },
+  {
+    "id": "factual_accuracy_002",
+    "category": "factual_accuracy",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, what is the largest moon of Saturn by diameter?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: Titan is the largest moon of Saturn by diameter.",
+    "key_facts": ["Titan"]
+  },
+  {
+    "id": "factual_accuracy_003",
+    "category": "factual_accuracy",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, which country has the longest coastline in the world?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: Canada has the longest coastline in the world.",
+    "key_facts": ["Canada"]
+  },
+  {
+    "id": "factual_accuracy_004",
+    "category": "factual_accuracy",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, what programming language was Python named after?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: Python was named after the British comedy troupe Monty Python, not the snake.",
+    "key_facts": ["Monty Python", "comedy / television show", "not the snake"]
+  },
+  {
+    "id": "multi_page_synthesis_001",
+    "category": "multi_page_synthesis",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, which came first: the founding of the city of Rome or the construction of the Great Pyramid of Giza, and by approximately how many years?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: the Great Pyramid of Giza was constructed around 2600 BCE, roughly 1800 years before the traditional founding of Rome in 753 BCE.",
+    "key_facts": ["Great Pyramid built ~2600 BCE", "Rome founded ~753 BCE", "Great Pyramid came first", "approximately 1800 years difference"],
+    "requires_articles": ["Great Pyramid of Giza", "Rome"]
+  },
+  {
+    "id": "multi_page_synthesis_002",
+    "category": "multi_page_synthesis",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, are both the Nile River and the Yangtze River longer than 6,000 kilometers?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: yes, both the Nile (approximately 7,088 km) and the Yangtze (approximately 6,300 km) are longer than 6,000 kilometers.",
+    "key_facts": ["Nile ~7,088 km", "Yangtze ~6300 km", "both exceed 6000 km"],
+    "requires_articles": ["Nile", "Yangtze"]
+  },
+  {
+    "id": "multi_page_synthesis_003",
+    "category": "multi_page_synthesis",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, did Marie Curie and Nikola Tesla ever live at the same time, and if so, for approximately how many years did their lives overlap?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: yes, Marie Curie (1867–1934) and Nikola Tesla (1856–1943) were contemporaries, with their lives overlapping for approximately 67 years.",
+    "key_facts": ["Curie 1867-1934", "Tesla 1856-1943", "overlap ~67 years"],
+    "requires_articles": ["Marie Curie", "Nikola Tesla"]
+  },
+  {
+    "id": "multi_hop_001",
+    "category": "multi_hop_reasoning",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, what is the capital of the country that contains the geographic center of the European Union's land area following Brexit?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: following Brexit, the geographic center of the EU shifted to a location near Bavaria in Germany, whose capital is Berlin.",
+    "key_facts": ["Brexit changed EU geographic center", "center shifted to Germany", "Berlin"],
+    "requires_articles": ["Geographic center of the European Union", "Germany"]
+  },
+  {
+    "id": "multi_hop_002",
+    "category": "multi_hop_reasoning",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, what body of water does the longest river on the continent that contains the world's largest hot desert drain into?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: The Sahara is the world's largest hot desert and is located in Africa; the Nile is Africa's longest river and drains into the Mediterranean Sea.",
+    "key_facts": ["Sahara = largest hot desert", "Africa", "Nile = longest African river", "Mediterranean Sea"],
+    "requires_articles": ["Sahara", "Nile", "Africa"]
+  },
+  {
+    "id": "multi_hop_003",
+    "category": "multi_hop_reasoning",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, was the inventor of the telephone still alive when the first commercial radio broadcast took place?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: Alexander Graham Bell, the inventor of the telephone, died in 1922, and the first commercial radio broadcast took place in 1920, so Bell was alive when it occurred.",
+    "key_facts": ["Alexander Graham Bell", "Bell died 1922", "first commercial radio broadcast 1920", "yes Bell was alive"],
+    "requires_articles": ["Alexander Graham Bell", "Radio broadcasting"]
+  },
+  {
+    "id": "multi_hop_004",
+    "category": "multi_hop_reasoning",
+    "format": "one_sentence_graded",
+    "question": "According to Wikipedia, what are the official languages, if any, of the country where the headquarters of the organization that awards the Nobel Peace Prize is located?",
+    "sample_correct_answer": "I searched Wikipedia and came up with the following answer: The Nobel Peace Prize is awarded by the Norwegian Nobel Committee, headquartered in Oslo, Norway, whose official languages are Norwegian and Sámi.",
+    "key_facts": ["Norwegian Nobel Committee", "Oslo", "Norway", "Norwegian", "Sámi"],
+    "requires_articles": ["Nobel Peace Prize", "Norway"]
+  }
+]

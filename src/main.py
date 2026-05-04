@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-model = os.getenv("ANTHROPIC_MODEL")
+generator_model = os.getenv("ANTHROPIC_GENERATOR_MODEL")
 
 client = anthropic.Anthropic()
 
 headers = {"User-Agent": "ClaudeWikiCLI/1.0 (amydn16@gmail.com)"}
 
-BASIC_SYSTEM_PROMPT = """
+GENERATOR_SYSTEM_PROMPT = """
 You are a helpful assistant that provides helpful, clear, and concise answers, using Wikipedia as efficiently as possible when necessary and appropriate.
 """
 
@@ -69,6 +69,7 @@ def run_tool(name, tool_input):
 
 
 def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
+    print(f"System prompt for agent:\n{system_prompt}")
     print(f"User: {query}")
 
     messages = [
@@ -80,7 +81,7 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
 
     try:
         response = client.messages.create(
-            model=model or "",
+            model=generator_model or "",
             system=system_prompt,
             max_tokens=max_tokens,
             tools=tools,  # pyright: ignore
@@ -113,7 +114,7 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
             )
 
             response = client.messages.create(
-                model=model or "",
+                model=generator_model or "",
                 max_tokens=max_tokens,
                 tools=tools,  # pyright: ignore
                 tool_choice={"type": "auto", "disable_parallel_tool_use": True},
@@ -123,9 +124,9 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
         final_text = next(block for block in response.content if block.type == "text")
 
         if search_used:
-            result = f"I searched Wikipedia and came up with the following answer:\n{final_text.text}"
+            result = f"I searched Wikipedia and came up with the following answer: {final_text.text}"
         else:
-            result = f"{final_text.text}\nI did not search Wikipdia to come up with this answer."
+            result = f"I did not search Wikipdia to come up with this answer: {final_text.text}."
 
         print(result)
         return result
