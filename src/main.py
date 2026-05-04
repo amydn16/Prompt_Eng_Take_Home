@@ -21,23 +21,22 @@ DEMO_QUERIES = [
     "Who's the current governor of Virginia?",
 ]
 
-# tools = [
-#     {
-#         "name": "search_wikipedia",
-#         "description": "Search Wikipedia to find the answer to a natural language query",
-#         "input_schema": {
-#             "type": "object",
-#             "properties": {
-#                 "query": {
-#                     "type": "string",
-#                     "description": "A natural language query, such as 'Who discovered DNA'",
-#                 },
-#             },
-#             "required": ["query"],
-#         },
-#     }
-# ]
-tools = []
+tools = [
+    {
+        "name": "search_wikipedia",
+        "description": "Search Wikipedia to find the answer to a natural language query",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {
+                    "type": "string",
+                    "description": "A natural language query, such as 'Who discovered DNA'",
+                },
+            },
+            "required": ["query"],
+        },
+    }
+]
 
 
 def get_wikipedia_page(query: str):
