@@ -1,5 +1,4 @@
 import anthropic
-import argparse
 import json
 import os
 import requests
@@ -69,11 +68,13 @@ def run_tool(name, tool_input):
     return {"error": f"Unknown tool: {name}"}
 
 
-def agent_loop(user_request: str, system_prompt: str, max_tokens: int = 1024):
+def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
+    print(f"User: {query}")
+
     messages = [
         {
             "role": "user",
-            "content": user_request,
+            "content": query,
         }
     ]
 
@@ -122,50 +123,21 @@ def agent_loop(user_request: str, system_prompt: str, max_tokens: int = 1024):
         final_text = next(block for block in response.content if block.type == "text")
 
         if search_used:
-            print(
-                f"I searched Wikipedia and came up with the following answer:\n{final_text.text}"
-            )
+            result = f"I searched Wikipedia and came up with the following answer:\n{final_text.text}"
         else:
-            print(
-                f"{final_text.text}\nI did not search Wikipdia to come up with this answer."
-            )
+            result = f"{final_text.text}\nI did not search Wikipdia to come up with this answer."
 
+        print(result)
+        return result
     except Exception as e:
         print(f"Exited agent loop due to error: {e}")
 
 
-def cli():
-    parser = argparse.ArgumentParser(
-        description="A tool that uses Claude to search Wikipedia and answer questions."
-    )
+def agent_loop_query_list(
+    query_list: list[str], system_prompt: str, max_tokens: int = 1024
+):
+    if not query_list:
+        raise Exception("Query list cannot be empty")
 
-    parser.add_argument("query", help="Query for Claude to answer")
-    parser.add_argument(
-        "--mode",
-        choices=["default", "demo", "evals"],
-        default="default",
-        help="Choose default to submit a query, demo to see a demo, evals to run evals suite",
-    )
-    parser.add_argument(
-        "--max-tokens",
-        type=int,
-        help="Optional argument setting max_tokens for the LLM, defaults to 1024",
-    )
-
-    args = parser.parse_args()
-
-    if args.mode == "default" and not args.query:
-        parser.error("A query is required in default mode")
-    elif args.mode == "default":
-        agent_loop(
-            user_request=args.query,
-            system_prompt=BASIC_SYSTEM_PROMPT,
-            max_tokens=args.max_tokens,
-        )
-    elif args.mode == "demo":
-        for demo_query in DEMO_QUERIES:
-            agent_loop(
-                user_request=demo_query,
-                system_prompt=BASIC_SYSTEM_PROMPT,
-                max_tokens=args.max_tokens,
-            )
+    for query in query_list:
+        agent_loop(query, system_prompt, max_tokens)

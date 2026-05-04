@@ -22,4 +22,4 @@ dev = [
 ]
 
 [project.scripts]
-claude-wikipedia = "src.main:cli"
+claude-wikipedia = "src.cli:cli"
