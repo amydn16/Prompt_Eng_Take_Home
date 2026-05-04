@@ -13,7 +13,7 @@ def cli():
         description="A tool that uses Claude to search Wikipedia and answer questions."
     )
 
-    parser.add_argument("query", help="Query for Claude to answer")
+    parser.add_argument("query", nargs="?", help="Query for Claude to answer")
     parser.add_argument(
         "--mode",
         choices=["default", "demo", "evals"],
@@ -23,6 +23,7 @@ def cli():
     parser.add_argument(
         "--max-tokens",
         type=int,
+        default=1024,
         help="Optional argument setting max_tokens for the LLM, defaults to 1024",
     )
 

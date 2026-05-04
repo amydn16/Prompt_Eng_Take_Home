@@ -38,7 +38,7 @@ def llm_grader(
     query: str,
     correct_answer: str,
     model_answer: str,
-    max_tokens: int = 1024,
+    max_tokens: int,
 ):
     grading_context = f"Query: {query}\nExample correct answer: {correct_answer}\nAnswer to grade: {model_answer}"
 
@@ -77,7 +77,7 @@ def full_agent_evals(
     file_path: str,
     generator_system_prompt: str,
     grader_system_prompt: str,
-    max_tokens: int = 1024,
+    max_tokens: int,
 ):
     evals_data = run_agent_on_evals(file_path, generator_system_prompt, max_tokens)
 
@@ -88,6 +88,7 @@ def full_agent_evals(
             evals_data[i]["question"],
             evals_data[i]["sample_correct_answer"],
             evals_data[i]["model_answer"],
+            max_tokens,
         ):
             score += new_score
 

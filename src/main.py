@@ -21,22 +21,23 @@ DEMO_QUERIES = [
     "Who's the current governor of Virginia?",
 ]
 
-tools = [
-    {
-        "name": "search_wikipedia",
-        "description": "Search Wikipedia to find the answer to a natural language query",
-        "input_schema": {
-            "type": "object",
-            "properties": {
-                "query": {
-                    "type": "string",
-                    "description": "A natural language query, such as 'Who discovered DNA'",
-                },
-            },
-            "required": ["query"],
-        },
-    }
-]
+# tools = [
+#     {
+#         "name": "search_wikipedia",
+#         "description": "Search Wikipedia to find the answer to a natural language query",
+#         "input_schema": {
+#             "type": "object",
+#             "properties": {
+#                 "query": {
+#                     "type": "string",
+#                     "description": "A natural language query, such as 'Who discovered DNA'",
+#                 },
+#             },
+#             "required": ["query"],
+#         },
+#     }
+# ]
+tools = []
 
 
 def get_wikipedia_page(query: str):
@@ -68,7 +69,7 @@ def run_tool(name, tool_input):
     return {"error": f"Unknown tool: {name}"}
 
 
-def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
+def agent_loop(query: str, system_prompt: str, max_tokens: int):
     print(f"System prompt for agent:\n{system_prompt}")
     print(f"User: {query}")
 
@@ -126,7 +127,7 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
         if search_used:
             result = f"I searched Wikipedia and came up with the following answer: {final_text.text}"
         else:
-            result = f"I did not search Wikipdia to come up with this answer: {final_text.text}."
+            result = f"I did not search Wikipedia to come up with this answer: {final_text.text}"
 
         print(result)
         return result
@@ -134,9 +135,8 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int = 1024):
         print(f"Exited agent loop due to error: {e}")
 
 
-def agent_loop_query_list(
-    query_list: list[str], system_prompt: str, max_tokens: int = 1024
-):
+def agent_loop_query_list(query_list: list[str], system_prompt: str, max_tokens: int):
+    print(f"Query list: {query_list}")
     if not query_list:
         raise Exception("Query list cannot be empty")
 
