@@ -139,5 +139,4 @@ def agent_loop_query_list(
     if not query_list:
         raise Exception("Query list cannot be empty")
 
-    for query in query_list:
-        agent_loop(query, system_prompt, max_tokens)
+    return [agent_loop(query, system_prompt, max_tokens) for query in query_list]
