@@ -1,7 +1,10 @@
 import anthropic
 import json
 import os
+import random
 import requests
+import time
+import wikipedia
 from dotenv import load_dotenv
 
 
@@ -13,11 +16,15 @@ client = anthropic.Anthropic()
 headers = {"User-Agent": "ClaudeWikiCLI/1.0 (amydn16@gmail.com)"}
 
 GENERATOR_SYSTEM_PROMPT = """
-You are a helpful assistant that provides helpful, clear, and concise answers, using Wikipedia as efficiently as possible when necessary and appropriate. When you receive a query, the first you must always do is consider whether you need to search Wikipedia to form an answer. E.g., there are stable, well-known facts in science and history that are widely accepted as true and do/can not change. In contrast, there are facts that naturally need to be updated regularly. There may also exist facts that are not available on Wikipedia. Always consult these guidelines and think carefully to decide whether to search Wikipedia to answer a query.
+You are a helpful assistant that provides helpful, clear, and concise responses, using Wikipedia as efficiently as possible when necessary and appropriate. When you receive a query, the first thing you must always do is consider whether you need to search Wikipedia to form an answer. E.g., there are stable, well-known facts in science and history that are widely accepted as true and do/can not change. In contrast, there are facts that naturally need to be updated regularly. There may also exist facts that are not available on Wikipedia. Always consult these guidelines and think carefully to decide whether to search Wikipedia to answer a query. Then when composing your response, you MUST format it as: 
+
+'[Independent clause indicating whether you searched Wikipedia and whether you used information from Wikipedia or from your internal knowledge to form the answer to the query]: [answer to the query]'.
+
+ALWAYS REMEMBER: if you do not find the information needed to answer a query from searching Wikipedia, and you decide to use your internal knowledge to form the answer, you MUST clearly indicate in your response (in the independent clause before the colon) that you were not able to find the information you needed from Wikipedia and are using your internal knowledge to form the answer.
 """
 
 DEMO_QUERIES = [
-    "When was the very first game of basketball played?",
+    "When was basketball invented?",
     "Who's the current governor of Virginia?",
 ]
 
@@ -39,32 +46,38 @@ tools = [
 ]
 
 
-def get_wikipedia_page(query: str):
-    search_res = requests.get(
-        "https://en.wikipedia.org/w/api.php",
-        params={
-            "action": "query",
-            "list": "search",
-            "srsearch": query,
-            "format": "json",
-            "srlimit": 1,
-        },
-        headers=headers,
-    )
-    best_title = search_res.json()["query"]["search"][0]["title"].replace(" ", "_")
+def get_wikipedia_page(query: str, retries: int = 10) -> str:
+    wikipedia.set_lang("en")
 
-    res = requests.get(
-        f"https://en.wikipedia.org/api/rest_v1/page/summary/{best_title}",
-        headers=headers,
-    )
-    content = res.json()["extract"]
+    for attempt in range(retries):
+        print(f"Trying to get Wikipedia page for query '{query}', attempt #{attempt}")
+        try:
+            page = wikipedia.page(query, auto_suggest=True)
+            print(f"Summary of Wikipedia page found: {page.summary}")
+            return page.summary
+        except wikipedia.DisambiguationError as e:
+            try:
+                page = wikipedia.page(e.options[0])
+                print(f"Summary of first Wikipedia page found: {page.summary}")
+                return page.summary
+            except Exception:
+                return "Disambiguation could not be resolved."
+        except wikipedia.PageError:
+            return "No matching Wikipedia article found."
+        except Exception as e:
+            if attempt < retries - 1:
+                delay = (2**attempt) + random.uniform(0, 0.5)
+                print(f"Sleeping for {delay} s... due to exception {e}")
+                time.sleep(delay)
+            else:
+                return f"Wikipedia lookup failed after {retries} attempts: {str(e)}"
 
-    return content
+    return "Unknown error in get_wikipedia_page."
 
 
-def run_tool(name, tool_input):
+def run_tool(name: str, tool_input: dict) -> dict:
     if name == "search_wikipedia":
-        return {"wikipedia_page_content": tool_input["query"]}
+        return {"wikipedia_page_content": get_wikipedia_page(tool_input["query"])}
     return {"error": f"Unknown tool: {name}"}
 
 
@@ -89,10 +102,6 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int):
             messages=messages,  # pyright: ignore
         )
 
-        search_used = False
-        if response.stop_reason == "tool_use":
-            search_used = True
-
         while response.stop_reason == "tool_use":
             tool_use = next(
                 block for block in response.content if block.type == "tool_use"
@@ -115,6 +124,7 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int):
 
             response = client.messages.create(
                 model=generator_model or "",
+                system=system_prompt,
                 max_tokens=max_tokens,
                 tools=tools,  # pyright: ignore
                 tool_choice={"type": "auto", "disable_parallel_tool_use": True},
@@ -123,12 +133,8 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int):
 
         final_text = next(block for block in response.content if block.type == "text")
 
-        if search_used:
-            result = f"I searched Wikipedia and came up with the following answer: {final_text.text}"
-        else:
-            result = f"I did not search Wikipedia to come up with this answer: {final_text.text}"
-
-        print(result)
+        result = final_text.text
+        print(f"Response: {result}")
         return result
     except Exception as e:
         print(f"Exited agent loop due to error: {e}")

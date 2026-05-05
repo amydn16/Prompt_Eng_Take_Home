@@ -11,15 +11,17 @@ grader_model = os.getenv("ANTHROPIC_GRADER_MODEL")
 client = anthropic.Anthropic()
 
 GRADER_SYSTEM_PROMPT = """
-You are a helpful assistant that grades a response to a query against an example of a correct response and returns a number as the grade. Each response, both that to be graded and the correct example, is one sentence containing a colon. The independent clause before the colon will always indicate whether a Wikipedia search was done to form the part of the sentence after the colon, which is the actual answer to the query.
+You are a helpful assistant that grades a response to a query against an example of a correct response and returns a number as the grade. Each response, both that to be graded and the correct example, is one sentence containing a colon. The independent clause before the colon will always indicate whether a Wikipedia search was done to form the part of the sentence after the colon, which is the actual answer to the query, and whether the information in this answer comes from a Wikipedia search or from internal knowledge.
 
-When grading a response, do not take the length or writing style of the query answer into consideration. Only consider whether the response aligns with the correct response example in terms of (1) whether a Wikipedia search was done and (2) whether the query answer is complete and correct. Consider the query answer in the correct response example to be your one and only source of truth for grading a response. Do not use your internal knowledge or any context beyond the query answer in the correct response example to grade a response.
+When grading a response, do not take the length or writing style of the query answer into consideration. Only consider whether the response aligns with the correct response example in terms of (1) whether a Wikipedia search was done and (2) whether the query answer is complete and correct. Use your best judgement to decide on (2).
 
-Specifically, if the correct response example says that a Wikipedia search was done to form its query answer, but the response being graded says that a Wikipedia search was not done to form its query answer, return 0. Conversely, if the correct response example says that a Wikipedia search was not done to form its query answer, but the response being graded says that a Wikipedia search was done to form its query answer, return 0 as well.
+If the correct response example says that a Wikipedia search was done to form its query answer, but the response being graded says that a Wikipedia search was not done to form its query answer, return 0. Conversely, if the correct response example says that a Wikipedia search was not done to form its query answer, but the response being graded says that a Wikipedia search was done to form its query answer, return 0 as well.
 
-If both the correct response example and the response being graded had a Wikipedia search done to form their respective query answers, but the latter provides an incorrect or an incomplete query answer compared to the former, return 0.5. Similarly, if both the correct response example and the response being graded did not have a Wikipedia search done to form their respective query answers, but the latter provides an incorrect or an incomplete query answer compared to the former, also return 0.5. Here, "incomplete" means that the query answer lacked some detail that plays arguably a considerable role in answering the query thoroughly.
+If both the correct response example and the response being graded had a Wikipedia search done to form their respective query answers, but the latter uses the information from the search provides an incorrect or an incomplete query answer compared to the former, return 0.5. Similarly, if both the correct response example and the response being graded did not have a Wikipedia search done to form their respective query answers, but the latter provides an incorrect or an incomplete query answer compared to the former, also return 0.5. Here, "incomplete" means that the query answer lacked some detail that plays arguably a considerable role in answering the query thoroughly.
 
-If both the correct response example and the response being graded had a Wikipedia search done to form their respective query answers, and the latter provides an equivalently complete and correct query answer as the former, return 1. Similarly, if both the correct response example and the response being graded did not have a Wikipedia search done to form their respective query answers, and the latter provides an equivalently complete and correct query answer as the former, return 1. It's perfectly fine if the response being graded provides a more verbose or detailed query answer than the correct response example, so long as it conveys the same idea as the correct response example. In this case, you should still return 1.
+If both the correct response example and the response being graded had a Wikipedia search done and used the information from the search to form their respective query answers, and the latter provides an equivalently complete and correct query answer as the former, return 1. Similarly, if both the correct response example and the response being graded did not have a Wikipedia search done to form their respective query answers, and the latter provides an equivalently complete and correct query answer as the former, return 1. It's perfectly fine if the response being graded provides a more verbose or detailed query answer than the correct response example, so long as it conveys the same idea as the correct response example. In this case, you should still return 1.
+
+If both the correct response example and the response being graded had a Wikipedia search done to form their respective query answers, but the latter wasn't able to find information from Wikipedia and instead provides a query answer from internal knowledge, return 0.5 if the query answer is equivalently complete and correct as that in the latter. Otherwise, return 0.
 
 Always remember to return the number that is your grade for the response. You do not need to return your rationale for the grade, but if you want to do so, you MUST format your return as '[grade]\\n[rationale]'.
 """
@@ -70,8 +72,10 @@ def llm_grader(
             messages=messages,  # pyright: ignore
         )
 
-        final_response = next(block for block in response.content if block.type == "text")
-        
+        final_response = next(
+            block for block in response.content if block.type == "text"
+        )
+
         final_response_parts = final_response.text.split("\n")
         score = float(final_response_parts[0].strip())
         rationale = ""

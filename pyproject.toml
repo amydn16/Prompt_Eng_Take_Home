@@ -6,6 +6,7 @@ dependencies = [
     "anthropic>=0.97.0",
     "python-dotenv>=1.2.2",
     "requests>=2.33.1",
+    "wikipedia>=1.4.0",
 ]
 
 [build-system]
