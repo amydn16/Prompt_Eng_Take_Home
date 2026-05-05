@@ -16,7 +16,7 @@ def cli():
     parser.add_argument("query", nargs="?", help="Query for Claude to answer")
     parser.add_argument(
         "--mode",
-        choices=["default", "demo", "evals"],
+        choices=["default", "demo", "evals-full", "evals-mini"],
         default="default",
         help="Choose default to submit a query, demo to see a demo, evals to run evals suite",
     )
@@ -43,7 +43,14 @@ def cli():
             system_prompt=GENERATOR_SYSTEM_PROMPT,
             max_tokens=args.max_tokens,
         )
-    elif args.mode == "evals":
+    elif args.mode == "evals-mini":
+        full_agent_evals(
+            file_path="evals/wikipedia_evals_mini.json",
+            generator_system_prompt=GENERATOR_SYSTEM_PROMPT,
+            grader_system_prompt=GRADER_SYSTEM_PROMPT,
+            max_tokens=args.max_tokens,
+        )
+    elif args.mode == "evals-full":
         full_agent_evals(
             file_path="evals/wikipedia_evals.json",
             generator_system_prompt=GENERATOR_SYSTEM_PROMPT,

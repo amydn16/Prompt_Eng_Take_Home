@@ -1,0 +1,20 @@
+[
+  {
+    "id": "search_decision_001",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "Who is the current Secretary-General of the United Nations? Answer in exactly 1 sentence.",
+    "sample_correct_response": "I searched Wikipedia and came up with the following answer: António Guterres.",
+    "key_facts": ["decides to search Wikipedia", "does not answer from memory alone"],
+    "rationale": "Officeholders change; the model's training data may be stale."
+  },
+  {
+    "id": "search_decision_002",
+    "category": "decides_to_search",
+    "format": "one_sentence_graded",
+    "question": "What is the chemical formula for water? Answer in exactly 1 sentence.",
+    "sample_correct_response": "I did not search Wikipedia to come up with this answer: the chemical formula for water is H2O.",
+    "key_facts": ["H2O", "does not search Wikipedia"],
+    "rationale": "Stable, well-known scientific fact that does not change."
+  }
+]

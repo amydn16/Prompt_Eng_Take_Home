@@ -13,7 +13,7 @@ client = anthropic.Anthropic()
 headers = {"User-Agent": "ClaudeWikiCLI/1.0 (amydn16@gmail.com)"}
 
 GENERATOR_SYSTEM_PROMPT = """
-You are a helpful assistant that provides helpful, clear, and concise answers, using Wikipedia as efficiently as possible when necessary and appropriate.
+You are a helpful assistant that provides helpful, clear, and concise answers, using Wikipedia as efficiently as possible when necessary and appropriate. When you receive a query, the first you must always do is consider whether you need to search Wikipedia to form an answer. E.g., there are stable, well-known facts in science and history that are widely accepted as true and do/can not change. In contrast, there are facts that naturally need to be updated regularly. There may also exist facts that are not available on Wikipedia. Always consult these guidelines and think carefully to decide whether to search Wikipedia to answer a query.
 """
 
 DEMO_QUERIES = [
@@ -69,7 +69,7 @@ def run_tool(name, tool_input):
 
 
 def agent_loop(query: str, system_prompt: str, max_tokens: int):
-    print(f"System prompt for agent:\n{system_prompt}")
+    print(f"Agent system prompt:\n{system_prompt}")
     print(f"User: {query}")
 
     messages = [
@@ -136,6 +136,7 @@ def agent_loop(query: str, system_prompt: str, max_tokens: int):
 
 def agent_loop_query_list(query_list: list[str], system_prompt: str, max_tokens: int):
     print(f"Query list: {query_list}")
+
     if not query_list:
         raise Exception("Query list cannot be empty")
 
