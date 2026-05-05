@@ -1,8 +1,8 @@
-# ClaudeWikiCLI
+# claude-wikipedia CLI
 
 A simple CLI that uses Claude and the Wikipedia API to answer a natural language query. It takes a natural language query and sends it to a Claude model. Claude then chooses whether to search Wikipedia to answer the query before issuing an answer. The answer always indicates whether the information in it comes from a Wikipedia search or from Claude's internal knowledge.
 
-I used Claude Sonnet 4.6 to answer queries. The project directory also includes an evals suite of 23 open-ended questions, and I used Claude Haiku 4.5 as the grader for Sonnet.
+I used Claude Sonnet 4.6 to answer queries. The project directory also includes an evals suite of more than 20 open-ended queries that test Claude's ability to answer questions by searching Wikipedia and, to a lesser extent, by using its internal knowledge. I used Claude Haiku 4.5 as the grader for evals.
 
 ## Requirements
 
@@ -53,7 +53,7 @@ source .env
 
 ## Usage
 
-### Seeing a demo
+### Running a demo
 
 Use demo mode to see Claude answer 2 simple sample queries:
 
@@ -73,7 +73,7 @@ claude-wikipedia 'who is the current governor of New York?'
 
 ### Running evals
 
-Run the query-answering model on a miniature version of the evals suite containing just 2 questions:
+Run the query-answering model on a subset of the evals suite containing just 2 queries:
 
 ```bash
 claude-wikipedia --mode evals-mini
@@ -81,7 +81,7 @@ claude-wikipedia --mode evals-mini
 
 In evals mode, the CLI always prints to the terminal the system prompt for the grader model, the query, an example of a correct answer, the query-answering model's answer, the numerical score that the grader model gives the answer, and any rationale for the score.
 
-Run the query-answering model on the full evals suite containing 23 questions:
+Run the query-answering model on the full evals suite containing more than 20 queries:
 
 ```bash
 claude-wikipedia --mode evals-full
