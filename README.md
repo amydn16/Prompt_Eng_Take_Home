@@ -14,7 +14,7 @@ I wrote most of the code in this project myself and used Sonnet 4.6 on Claude AI
 
 ## Installation
 
-1. Clone the repository (only Robert Ying has access):
+1. Clone the repository:
 
 ```bash
 git clone https://github.com/amydn16/Prompt_Eng_Take_Home.git
